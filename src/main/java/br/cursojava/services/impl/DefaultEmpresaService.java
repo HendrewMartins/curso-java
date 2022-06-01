@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import br.cursojava.entity.Empresa;
 import br.cursojava.exception.MenssageNotFoundException;
@@ -16,12 +17,14 @@ public class DefaultEmpresaService implements EmpresaService {
     @Inject
     public EmpresaRepository repository;
 
+    @Transactional
     @Override
     public Empresa saveEmpresa(Empresa empresa) {
         repository.persistAndFlush(empresa);
         return empresa;
     }
 
+    @Transactional
     @Override
     public Empresa updateEmpresa(Long id, Empresa usuario) throws MenssageNotFoundException {
         Empresa update = getEmpresaById(id);
@@ -29,6 +32,7 @@ public class DefaultEmpresaService implements EmpresaService {
         return update;
     }
 
+    @Transactional
     @Override
     public void deleteEmpresa(Long id) throws MenssageNotFoundException {
         repository.delete(getEmpresaById(id));
