@@ -65,7 +65,7 @@ public class UsuarioController {
     }
 
     @GET
-    @RolesAllowed("USER")
+    @RolesAllowed("ADMIN")
     @Operation(summary = "Lista Usuários", description = "Buscar todos os usuários")
     @APIResponses(value = @APIResponse(responseCode = "200", description = "Sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))))
     public List<Usuario> getUsuarios() {
