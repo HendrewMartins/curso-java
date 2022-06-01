@@ -3,6 +3,9 @@ package br.cursojava.services;
 
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
+import br.cursojava.dto.UsuarioLogin;
 import br.cursojava.entity.Usuario;
 import br.cursojava.exception.MenssageNotFoundException;
 
@@ -23,5 +26,7 @@ public interface UsuarioService {
     Long countUsuario();
 
     List<Usuario> allUsuarioPagination(int pag, int quant);
+
+    Response generateToken(UsuarioLogin uLogin) throws Exception;
 
 }

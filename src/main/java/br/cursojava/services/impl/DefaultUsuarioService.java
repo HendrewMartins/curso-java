@@ -5,16 +5,26 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+
+import br.cursojava.dto.Token;
+import br.cursojava.dto.UsuarioLogin;
 import br.cursojava.entity.Usuario;
 import br.cursojava.exception.MenssageNotFoundException;
 import br.cursojava.repository.UsuarioRepository;
 import br.cursojava.services.UsuarioService;
 import br.cursojava.util.PBKDF2Encoder;
+import br.cursojava.util.TokenUtils;
 import io.quarkus.panache.common.Page;
 
 @ApplicationScoped
 public class DefaultUsuarioService implements UsuarioService {
+
+    @ConfigProperty(name = "br.cursojava.jwt.duration") public Long duration;
+	@ConfigProperty(name = "mp.jwt.verify.issuer") public String issuer;
 
     @Inject
     private final UsuarioRepository usuarioRepository;
@@ -35,7 +45,6 @@ public class DefaultUsuarioService implements UsuarioService {
             usuarioRepository.persistAndFlush(usuario);
             return usuario;
         }
-
         return null;
     }
 
@@ -84,6 +93,31 @@ public class DefaultUsuarioService implements UsuarioService {
     @Override
     public List<Usuario> allUsuarioPagination(int pag, int quant) {
         return usuarioRepository.findAll().page(Page.of(pag,quant)).list();
+    }
+
+    @Override
+    public Response generateToken(UsuarioLogin userLogin) throws Exception{
+
+        Usuario usuario = usuarioRepository.find("email", userLogin.getEmail()).firstResult();
+       
+        try {
+            if (usuario != null && verifyCryptPassword(usuario, userLogin)){
+                try {
+                    return Response.ok(new Token(TokenUtils.generateToken(usuario.getEmail(), usuario.getRoles(), duration, issuer))).build();
+                } catch (Exception e) {
+                    return Response.status(Status.UNAUTHORIZED).build();
+                }
+            } else {
+                return Response.status(Status.UNAUTHORIZED).build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean verifyCryptPassword(Usuario user, UsuarioLogin login){
+        return user.getSenha().equals(encoder.encode(login.getSenha()));
     }
 
 }
