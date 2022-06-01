@@ -3,6 +3,7 @@ package br.cursojava.services.impl;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
 import br.cursojava.entity.Empresa;
 import br.cursojava.exception.MenssageNotFoundException;
@@ -12,6 +13,7 @@ import br.cursojava.services.EmpresaService;
 @ApplicationScoped
 public class DefaultEmpresaService implements EmpresaService {
 
+    @Inject
     public EmpresaRepository repository;
 
     @Override
@@ -30,7 +32,6 @@ public class DefaultEmpresaService implements EmpresaService {
     @Override
     public void deleteEmpresa(Long id) throws MenssageNotFoundException {
         repository.delete(getEmpresaById(id));
- 
     }
 
     @Override
