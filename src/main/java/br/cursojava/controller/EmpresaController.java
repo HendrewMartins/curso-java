@@ -49,14 +49,14 @@ public class EmpresaController {
     @Operation(summary = "Atualizar um Empresa", description = "Atualizar um Empresa existente via id")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Empresa.class))),
-            @APIResponse(responseCode = "404", description = "Usuário não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
+            @APIResponse(responseCode = "404", description = "Empresa não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
     public Empresa updateEmpresa(@PathParam("id") Long id, @Valid Empresa empresa) throws MenssageNotFoundException {
         return service.updateEmpresa(id, empresa);
     }
 
     @GET
     @RolesAllowed("ADMIN")
-    @Operation(summary = "Lista Usuários", description = "Buscar todos os usuários")
+    @Operation(summary = "Lista Empresa", description = "Buscar todos os Empresa")
     @APIResponses(value = @APIResponse(responseCode = "200", description = "Sucesso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Empresa.class))))
     public List<Empresa> getEmpresa() {
         return service.allEmpresa();
@@ -65,10 +65,10 @@ public class EmpresaController {
     @GET
     @RolesAllowed("ADMIN")
     @Path("/{id}")
-    @Operation(summary = "Buscar usuário", description = "Buscar usuário por Id")
+    @Operation(summary = "Buscar Empresa", description = "Buscar Empresa por Id")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Empresa.class))),
-            @APIResponse(responseCode = "404", description = "Usuário não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
+            @APIResponse(responseCode = "404", description = "Empresa não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
     public Empresa getEmpresaById(@PathParam("id") Long id)  throws MenssageNotFoundException {
         return service.getEmpresaById(id);
     }
@@ -76,10 +76,10 @@ public class EmpresaController {
     @DELETE
     @RolesAllowed("ADMIN")
     @Path("/{id}")
-    @Operation(summary = "Deletar um Usuário", description = "Apagar um Usuário existente via id")
+    @Operation(summary = "Deletar um Empresa", description = "Apagar um Empresa existente via id")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class))),
-            @APIResponse(responseCode = "404", description = "Usuário não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
+            @APIResponse(responseCode = "404", description = "Empresa não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
     public boolean updateEmpresa(@PathParam("id") Long id) throws MenssageNotFoundException {
         service.deleteEmpresa(id);
         return true;
