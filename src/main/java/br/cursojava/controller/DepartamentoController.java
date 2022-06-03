@@ -20,8 +20,6 @@ import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
 import br.cursojava.entity.Departamento;
-import br.cursojava.entity.DepartamentoId;
-import br.cursojava.entity.Empresa;
 import br.cursojava.exception.MenssageNotFoundException;
 import br.cursojava.exceptionHandler.ExceptionHandler;
 import br.cursojava.services.DepartamentoService;
@@ -55,10 +53,7 @@ public class DepartamentoController {
             @APIResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Departamento.class))),
             @APIResponse(responseCode = "404", description = "Departamento não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
     public Departamento update(@PathParam("id") Long id, @PathParam("empresaId") Long empresaId, @Valid Departamento objeto) throws MenssageNotFoundException {
-         return service.update(DepartamentoId.builder()
-        .id(id)
-        .empresa(Empresa.builder().id(empresaId).build())
-        .build(), objeto);
+         return service.update(id, empresaId, objeto);
     }
 
     @GET
@@ -77,10 +72,7 @@ public class DepartamentoController {
             @APIResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Departamento.class))),
             @APIResponse(responseCode = "404", description = "Departamento não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
     public Departamento getById(@PathParam("id") Long id,  @PathParam("empresaId") Long empresaId)  throws MenssageNotFoundException {
-        return service.getById(DepartamentoId.builder()
-        .id(id)
-        .empresa(Empresa.builder().id(empresaId).build())
-        .build());
+        return service.getById(id,empresaId);
     }
 
     @DELETE
@@ -91,10 +83,7 @@ public class DepartamentoController {
             @APIResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Boolean.class))),
             @APIResponse(responseCode = "404", description = "Departamento não localizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExceptionHandler.ErrorResponseBody.class))) })
     public boolean update(@PathParam("id") Long id,  @PathParam("empresaId") Long empresaId) throws MenssageNotFoundException {
-        service.delete(DepartamentoId.builder()
-        .id(id)
-        .empresa(Empresa.builder().id(empresaId).build())
-        .build());
+        service.delete(id, empresaId);
         return true;
     }
     

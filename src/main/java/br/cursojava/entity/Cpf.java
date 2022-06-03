@@ -1,5 +1,7 @@
 package br.cursojava.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "cpf")
 @Entity
-public class Cpf {
+public class Cpf implements Serializable{
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

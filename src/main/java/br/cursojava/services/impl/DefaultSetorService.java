@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import br.cursojava.entity.Setor;
 import br.cursojava.exception.MenssageNotFoundException;
@@ -16,12 +17,14 @@ public class DefaultSetorService implements SetorService{
     @Inject
     SetorRepository repository;
 
+    @Transactional
     @Override
     public Setor save(Setor setor) {
         repository.persistAndFlush(setor);
         return setor;
     }
 
+    @Transactional
     @Override
     public Setor update(Long id, Setor setor) throws MenssageNotFoundException {
         Setor update = getById(id);
@@ -30,6 +33,7 @@ public class DefaultSetorService implements SetorService{
         return update;
     }
 
+    @Transactional
     @Override
     public void delete(Long id) throws MenssageNotFoundException {
         repository.delete(getById(id));

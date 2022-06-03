@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -39,7 +40,7 @@ public class Cliente {
     @Column(name = "nome")
     private String nome;
 
-    @OneToOne(fetch = FetchType.LAZY,  cascade=CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER,  cascade=CascadeType.ALL)
     @JoinColumn(name = "cpfId", referencedColumnName = "cpfid")
     private Cpf cpf;
 
@@ -50,6 +51,26 @@ public class Cliente {
         name = "clientesetor",
         joinColumns =  @JoinColumn(name="clienteId", referencedColumnName = "clienteId"),
         inverseJoinColumns = @JoinColumn(name = "setorId", referencedColumnName = "setorId"))
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Setor> setor;
+
+
+    public void addEndereco(Endereco endereco) {
+        this.endereco.add(endereco);
+        endereco.setCliente(this);
+    }
+ 
+    public void removeEndereco(Endereco endereco) {
+        this.endereco.remove(endereco);
+        endereco.setCliente(null);
+    }
+
+    public void addSetor(Setor setor) {
+        this.setor.add(setor);
+    }
+ 
+    public void removeSetor(Setor setor) {
+        this.setor.remove(setor);
+    }
+
 }

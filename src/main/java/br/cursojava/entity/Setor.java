@@ -1,5 +1,7 @@
 package br.cursojava.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,7 +25,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Table(name = "setor")
 @Entity
-public class Setor {
+public class Setor implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,7 +35,7 @@ public class Setor {
     @Column(name = "nome")
     private String nome;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumns({
         @JoinColumn(name = "empresaId", referencedColumnName = "empresaId"),
         @JoinColumn(name = "departamentoId", referencedColumnName = "sequenciaDepartamento")

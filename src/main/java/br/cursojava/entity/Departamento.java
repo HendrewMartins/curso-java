@@ -27,8 +27,7 @@ public class Departamento {
     @EmbeddedId
     private DepartamentoId id;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "empresaid", referencedColumnName = "empresaId", insertable = false, updatable = false)
     private Empresa empresa;
     
