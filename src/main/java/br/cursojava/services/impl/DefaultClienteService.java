@@ -2,7 +2,6 @@ package br.cursojava.services.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -16,14 +15,18 @@ import br.cursojava.exception.MenssageNotFoundException;
 import br.cursojava.repository.ClienteRepository;
 import br.cursojava.services.ClienteService;
 
+/**
+ * @author Hendrew Martins
+ *         Classe de Negocio Cliente
+ */
 @ApplicationScoped
 public class DefaultClienteService implements ClienteService {
 
     @Inject
     public ClienteRepository respository;
 
-    @Inject 
-    public EntityManager em;
+    @Inject
+    EntityManager entityManager;
 
     @Transactional
     @Override
@@ -38,14 +41,40 @@ public class DefaultClienteService implements ClienteService {
     @Transactional
     @Override
     public Cliente update(Long id, Cliente cliente) throws MenssageNotFoundException {
-
-        List<Cliente> cli = (List<Cliente>) em.createNativeQuery("select * from cliente",Cliente.class).getResultList();
-
-        List<Endereco> enderecoRemover = new ArrayList<>();
-        List<Setor> setorRemover = new ArrayList<>();
-        List<Setor> setorValidado = new ArrayList<>();
         Cliente update = getById(id);
         update.setNome(cliente.getNome());
+        this.atualizarEnderecoCliente(update, cliente);
+        this.atualizarSetor(update, cliente);
+        return update;
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long id) throws MenssageNotFoundException {
+        respository.delete(getById(id));
+
+    }
+
+    @Override
+    public List<Cliente> all() {
+        return entityManager.createNativeQuery("Select * from cliente", Cliente.class)
+                .getResultList();
+    }
+
+    @Override
+    public Cliente getById(Long id) throws MenssageNotFoundException {
+        return respository.findByIdOptional(id)
+                .orElseThrow(() -> new MenssageNotFoundException("Não foi possivel localizar o Id informado"));
+
+    }
+
+    /**
+     * 
+     * @param   update
+     * @param cliente
+     */
+    private void atualizarEnderecoCliente(Cliente update, Cliente cliente) {
+        List<Endereco> enderecoRemover = new ArrayList<>();
 
         for (Endereco enderecoBanco : update.getEndereco()) {
             String acao = "REMOVER";
@@ -74,8 +103,12 @@ public class DefaultClienteService implements ClienteService {
                 update.addEndereco(endereco);
             }
         }
+    }
 
-        
+    private void atualizarSetor(Cliente update, Cliente cliente) {
+        List<Setor> setorRemover = new ArrayList<>();
+        List<Setor> setorValidado = new ArrayList<>();
+
         for (Setor setorBanco : update.getSetor()) {
             String acao = "REMOVER";
             for (Setor setorRecebido : cliente.getSetor()) {
@@ -94,38 +127,17 @@ public class DefaultClienteService implements ClienteService {
             update.removeSetor(setor);
         }
 
-        for (Setor setor: cliente.getSetor()){
+        for (Setor setor : cliente.getSetor()) {
             String acao = "ADICIONAR";
-            for(Setor setorExiste: setorValidado){
-                if(setor.getId() == setorExiste.getId()){
+            for (Setor setorExiste : setorValidado) {
+                if (setor.getId() == setorExiste.getId()) {
                     acao = "EXISTE";
                 }
             }
-            if(acao == "ADICIONAR") {
+            if (acao == "ADICIONAR") {
                 update.addSetor(setor);
             }
         }
-
-        return update;
-    }
-
-    @Transactional
-    @Override
-    public void delete(Long id) throws MenssageNotFoundException {
-        respository.delete(getById(id));
-
-    }
-
-    @Override
-    public List<Cliente> all() {
-        return respository.listAll();
-    }
-
-    @Override
-    public Cliente getById(Long id) throws MenssageNotFoundException {
-        return respository.findByIdOptional(id)
-                .orElseThrow(() -> new MenssageNotFoundException("Não foi possivel localizar o Id informado"));
-
     }
 
 }

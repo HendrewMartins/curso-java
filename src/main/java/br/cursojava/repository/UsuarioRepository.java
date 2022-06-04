@@ -13,5 +13,6 @@ public class UsuarioRepository implements PanacheRepository<Usuario> {
     public List<Usuario> findByNomeUsuario(String nome){
       return find("nome", nome).list();
     }
-    
+
+ 
 }
